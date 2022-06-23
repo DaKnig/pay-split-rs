@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <object class="GtkWindow" id="window">
+    <property name="title" translatable="true">Pay split</property>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="top_bar">
+        <child>
+          <object class="GtkButton" id="add_button">
+            <property name="focusable">true</property>
+            <property name="receives-default">true</property>
+	    <property name="icon-name">list-add-symbolic</property>
+            <property name="tooltip-text">Add Transaction</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="split_button">
+            <property name="label" translatable="true">Split!</property>
+            <property name="focusable">true</property>
+            <property name="tooltip-text">Show who owes whom and how much</property>
+            <property name="receives-default">true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <property name="child">
+      <object class="GtkScrolledWindow">
+        <child>
+          <object class="GtkListBox" id="pay_list">
+            <property name="selection-mode">none</property>
+          </object>
+        </child>
+      </object>
+    </property>
+
+  </object>
+</interface>
