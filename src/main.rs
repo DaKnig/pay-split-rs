@@ -156,37 +156,31 @@ mod tests {
 impl TransactionList {
     /// add a new row if the last row is not empty
     fn add_empty_row(&mut self) {
-        let last = self.amounts.last().zip(self.names.last());
-        if last == None
-            || last.unwrap().0.buffer().bytes() > 0
-            || last.unwrap().1.buffer().bytes() > 0
-        {
-            // construct the Entrys
-            self.amounts.push(
-                Entry::builder()
-                    .placeholder_text("0")
-                    .max_width_chars(6)
-                    .input_purpose(gtk::InputPurpose::Number)
-                    .input_hints(gtk::InputHints::PRIVATE)
-                    .xalign(1.)
-                    .build(),
-            );
+        // construct the Entrys
+        self.amounts.push(
+            Entry::builder()
+                .placeholder_text("0")
+                .max_width_chars(6)
+                .input_purpose(gtk::InputPurpose::Number)
+                .input_hints(gtk::InputHints::PRIVATE)
+                .xalign(1.)
+                .build(),
+        );
 
-            self.names.push(
-                Entry::builder()
-                    .placeholder_text("name")
-                    .max_width_chars(30)
-                    .build(),
-            );
+        self.names.push(
+            Entry::builder()
+                .placeholder_text("name")
+                .max_width_chars(30)
+                .build(),
+        );
 
-            // put them in a Box
-            let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
-            row.append(self.names.last().unwrap());
-            row.append(self.amounts.last().unwrap());
+        // put them in a Box
+        let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+        row.append(self.names.last().unwrap());
+        row.append(self.amounts.last().unwrap());
 
-            // attach them to the widget
-            self.widget.append(&row);
-        }
+        // attach them to the widget
+        self.widget.append(&row);
     }
 }
 
@@ -207,7 +201,7 @@ fn activate(app: &Application) {
         .object("add_button")
         .expect("Could not get object `add_button` from builder.");
 
-    let list: Rc<RefCell<TransactionList>> = Rc::new(RefCell::new(TransactionList {
+    let list = Rc::new(RefCell::new(TransactionList {
         amounts: vec![],
         names: vec![],
         widget: builder
@@ -224,9 +218,7 @@ fn activate(app: &Application) {
         println!("{:?}", l1.borrow().split_pay());
     });
 
-    add_button.connect_clicked(move |_| {
-        println!("{:?}", list.borrow_mut().add_empty_row());
-    });
+    add_button.connect_clicked(move |_| list.borrow_mut().add_empty_row());
 
     // add_button.connect
     // glib::clone!(@strong pay_list => move |_| {

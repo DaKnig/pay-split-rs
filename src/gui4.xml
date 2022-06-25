@@ -2,6 +2,7 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkWindow" id="window">
+    <property name="height-request">400</property>
     <property name="title" translatable="true">Pay split</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="top_bar">
