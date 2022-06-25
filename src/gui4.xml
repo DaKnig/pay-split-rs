@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkWindow" id="window">
-    <property name="height-request">400</property>
+    <property name="height-request">350</property>
     <property name="title" translatable="true">Pay split</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="top_bar">
@@ -24,15 +24,18 @@
         </child>
       </object>
     </child>
-    <property name="child">
+    <child>
       <object class="GtkScrolledWindow">
+
         <child>
-          <object class="GtkListBox" id="pay_list">
-            <property name="selection-mode">none</property>
+          <object class="GtkGrid" id="pay_list">
+	    <property name="column-spacing">5</property>
+	    <property name="row-spacing">5</property>j
           </object>
         </child>
+
       </object>
-    </property>
+    </child>
 
   </object>
 </interface>

@@ -37,7 +37,7 @@ impl fmt::Display for Transaction {
 struct TransactionList {
     amounts: Vec<Entry>,
     names: Vec<Entry>,
-    widget: gtk::ListBox,
+    widget: gtk::Grid,
 }
 
 impl TransactionList {
@@ -138,7 +138,7 @@ mod tests {
         let t = TransactionList {
             amounts: amounts.iter().map(string_to_entry).collect(),
             names: names.iter().map(string_to_entry).collect(),
-            widget: gtk::ListBox::new(),
+            widget: gtk::Grid::new(),
         };
 
         println!("{:?}", t.split_pay());
@@ -174,13 +174,13 @@ impl TransactionList {
                 .build(),
         );
 
-        // put them in a Box
-        let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
-        row.append(self.names.last().unwrap());
-        row.append(self.amounts.last().unwrap());
-
         // attach them to the widget
-        self.widget.append(&row);
+        let last_row: i32 = self.names.len() as i32;
+        self.widget.insert_row(last_row); // at the top
+        self.widget
+            .attach(self.names.last().unwrap(), 0, last_row, 1, 1);
+        self.widget
+            .attach(self.amounts.last().unwrap(), 1, last_row, 1, 1);
     }
 }
 
@@ -196,7 +196,7 @@ fn activate(app: &Application) {
     // Set application
     window.set_application(Some(app));
 
-    // OK IF RUST WANTS ME TO DO IT WITH HECKING CLOSURES...
+    // OK IF RUST WANTS ME TO DO IT WITH CLOSURES...
     let add_button: gtk::Button = builder
         .object("add_button")
         .expect("Could not get object `add_button` from builder.");
@@ -219,11 +219,6 @@ fn activate(app: &Application) {
     });
 
     add_button.connect_clicked(move |_| list.borrow_mut().add_empty_row());
-
-    // add_button.connect
-    // glib::clone!(@strong pay_list => move |_| {
-
-    // })
 
     window.show();
 }
