@@ -8,8 +8,19 @@ use gtk::glib;
 use gtk::prelude::*;
 use gtk::{Application, Entry};
 
+// use libadwaita as adw;
+// use adw::prelude::*;
+
+// use adw::{ActionRow, ApplicationWindow, HeaderBar};
+// use adw::{Window};
+
 fn main() {
     // Create a new application
+    if let Err(_) = gtk::init() {
+        println!("GTK INIT ERROR!");
+        return;
+    }
+    adw::init();
     let app = Application::builder()
         .application_id("null.daknig.pay_split")
         .build();
@@ -171,6 +182,7 @@ impl TransactionList {
             Entry::builder()
                 .placeholder_text("name")
                 .max_width_chars(30)
+                .hexpand(true)
                 .build(),
         );
 
@@ -189,7 +201,7 @@ fn activate(app: &Application) {
     let builder = gtk::Builder::from_string(include_str!("gui4.xml"));
 
     // Get window and button from `gtk::Builder`
-    let window: gtk::Window = builder
+    let window: adw::Window = builder
         .object("window")
         .expect("Could not get object `window` from builder.");
 
