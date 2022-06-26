@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="AdwWindow" id="window">
-    <property name="height-request">350</property>
+    <property name="height-request">400</property>
     <property name="title" translatable="true">Pay split</property>
     <property name="content">
       <object class="GtkBox">
@@ -28,6 +28,13 @@
 	  </object>
 	</child>
 	<child>
+	  <object class="AdwViewStack" id="stack">
+	    <child>
+	      <object class="AdwViewStackPage">
+		<property name="name">transactions</property>
+		<property name="title">Transactions</property>
+
+		<property name="child">
 	  <object class="GtkScrolledWindow">
 
             <property name="vexpand">true</property>
@@ -37,8 +44,33 @@
 		<property name="row-spacing">5</property>j
               </object>
             </child>
-
 	  </object>
+
+		</property>
+
+	      </object>
+	    </child>
+	    <child>
+	      <object class="AdwViewStackPage">
+		<property name="name">results</property>
+		<property name="title">Results</property>
+		<property name="child">
+		  <object class="GtkListBox">
+		    <property name="vexpand">true</property>
+		  </object>
+		</property>
+	      </object>
+	    </child>
+	  </object>
+	</child>
+	<child>
+          <object class="AdwViewSwitcherBar">
+            <property name="stack">stack</property>
+            <!-- <binding name="reveal"> -->
+            <!-- <lookup name="title-visible">title</lookup> -->
+	    <property name="reveal">true</property>
+            <!-- </binding> -->
+          </object>
 	</child>
 
       </object>
