@@ -8,70 +8,70 @@
       <object class="GtkBox">
         <property name="orientation">vertical</property>
         <child>
-	  <object class="GtkHeaderBar" id="top_bar">
+          <object class="GtkHeaderBar" id="top_bar">
             <child>
               <object class="GtkButton" id="add_button">
-		<property name="focusable">true</property>
-		<property name="receives-default">true</property>
-		<property name="icon-name">list-add-symbolic</property>
-		<property name="tooltip-text">Add Transaction</property>
+                <property name="focusable">true</property>
+                <property name="receives-default">true</property>
+                <property name="icon-name">list-add-symbolic</property>
+                <property name="tooltip-text">Add Transaction</property>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="split_button">
-		<property name="label" translatable="true">Split!</property>
-		<property name="focusable">true</property>
-		<property name="tooltip-text">Show who owes whom and how much</property>
-		<property name="receives-default">true</property>
+                <property name="label" translatable="true">Split!</property>
+                <property name="focusable">true</property>
+                <property name="tooltip-text">Show who owes whom and how much</property>
+                <property name="receives-default">true</property>
               </object>
             </child>
-	  </object>
-	</child>
-	<child>
-	  <object class="AdwViewStack" id="stack">
-	    <child>
-	      <object class="AdwViewStackPage">
-		<property name="name">transactions</property>
-		<property name="title">Transactions</property>
-
-		<property name="child">
-	  <object class="GtkScrolledWindow">
-
-            <property name="vexpand">true</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStack" id="stack">
             <child>
-              <object class="GtkGrid" id="pay_list">
-		<property name="column-spacing">5</property>
-		<property name="row-spacing">5</property>j
+              <object class="AdwViewStackPage">
+                <property name="name">transactions</property>
+                <property name="title">Transactions</property>
+
+                <property name="child">
+                  <object class="GtkScrolledWindow">
+
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="GtkGrid" id="pay_list">
+                        <property name="column-spacing">5</property>
+                        <property name="row-spacing">5</property>j
+                      </object>
+                    </child>
+                  </object>
+
+                </property>
+
               </object>
             </child>
-	  </object>
-
-		</property>
-
-	      </object>
-	    </child>
-	    <child>
-	      <object class="AdwViewStackPage">
-		<property name="name">results</property>
-		<property name="title">Results</property>
-		<property name="child">
-		  <object class="GtkListBox">
-		    <property name="vexpand">true</property>
-		  </object>
-		</property>
-	      </object>
-	    </child>
-	  </object>
-	</child>
-	<child>
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">results</property>
+                <property name="title">Results</property>
+                <property name="child">
+                  <object class="GtkListBox">
+                    <property name="vexpand">true</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
           <object class="AdwViewSwitcherBar">
             <property name="stack">stack</property>
             <!-- <binding name="reveal"> -->
             <!-- <lookup name="title-visible">title</lookup> -->
-	    <property name="reveal">true</property>
+            <property name="reveal">true</property>
             <!-- </binding> -->
           </object>
-	</child>
+        </child>
 
       </object>
     </property>
