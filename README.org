@@ -1,0 +1,28 @@
+* Pay split
+Pay split is a GTK based program for splitting expenses equally.
+Ever went on a night out with friends, each person paid a different sum and
+you wanted to split the sum? This tool will help you.
+
+Designed for phones and computers!
+
+** How to use it
+Press the + button to add transactions. fill in the name of the person who
+paid and enter the sum they paid. The default sum is 0. Then press the
+`Split!` button to see the result as the tool churns at the job.
+
+** building steps
+Get gtk and adawaita development libs; The following commands are for Fedora:
+
+#+BEGIN_SRC bash
+  # install the dependencies
+  sudo dnf install gtk4-devel libadwaita-devel
+  # install rustc and cargo
+  sudo dnf install rustc cargo
+  # build and run!
+  cargo run
+#+END_SRC
+
+please report any problems, design flaws, suggestions, experiences,
+thoughts or whatever else in the issues or in the LinMob matrix chat (or any
+chatroom I am on). this is my first GTK programbut it does not mean I don't
+want it to be good.
