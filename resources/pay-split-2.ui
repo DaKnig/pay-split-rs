@@ -23,7 +23,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="add-button">
-                    <property name="label">+</property>
+                    <property name="icon-name">list-add-symbolic</property>
                   </object>
                 </child>
                 <!-- Custom fragments -->
