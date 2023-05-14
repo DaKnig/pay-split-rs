@@ -47,23 +47,22 @@ pub fn build_ui(app: &Application) {
 
     factory.connect_bind(move |_, list_item| {
         // Get `Payment` from `ListItem`
-        let boxed_payment: BoxedAnyObject = list_item
+        let list_item = list_item
             .downcast_ref::<ListItem>()
-            .expect("Needs to be ListItem")
+            .expect("Needs to be ListItem");
+        let boxed_payment: BoxedAnyObject = list_item
             .item()
             .and_downcast::<BoxedAnyObject>()
             .expect("The item has to be an `IntegerObject`.");
 
         // Get `PaymentWidget` from `ListItem`
         let widget: PaymentWidget = list_item
-            .downcast_ref::<ListItem>()
-            .expect("Needs to be ListItem")
             .child()
             .and_downcast::<PaymentWidget>()
             .expect("The child has to be a `PaymentWidget`.");
 
         // Set "widget" to "payment"
-	widget.bind_boxed_payment(boxed_payment);
+        widget.bind_boxed_payment(boxed_payment);
         // widget.set_label(&integer_object.number().to_string());
     });
 

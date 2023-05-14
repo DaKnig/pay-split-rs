@@ -12,8 +12,7 @@ glib::wrapper! {
 
 impl PaymentWidget {
     pub fn new() -> Self {
-        Object::builder()
-            .build()
+        Object::builder().build()
     }
     pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {
         self.imp().bind_boxed_payment(boxed_payment)
