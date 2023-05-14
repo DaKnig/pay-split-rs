@@ -1,8 +1,7 @@
-// now the Transaction widget
 mod imp;
 
-use adw::{glib, gtk};
-use glib::Object;
+use adw::{glib, gtk, subclass::prelude::*};
+use glib::{BoxedAnyObject, GString, Object};
 
 glib::wrapper! {
     pub struct PaymentWidget(ObjectSubclass<imp::PaymentWidget>)
@@ -15,5 +14,23 @@ impl PaymentWidget {
     pub fn new() -> Self {
         Object::builder()
             .build()
+    }
+    pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {
+        self.imp().bind_boxed_payment(boxed_payment)
+    }
+}
+
+#[derive(Debug)]
+pub struct Payment {
+    from: GString,
+    amount: f32,
+}
+
+impl Default for Payment {
+    fn default() -> Self {
+        Self {
+            from: "".into(),
+            amount: 0.0,
+        }
     }
 }

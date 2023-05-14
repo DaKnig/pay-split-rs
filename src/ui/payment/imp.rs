@@ -1,4 +1,6 @@
-use adw::{glib, gtk};
+use adw::{glib, gtk, prelude::*};
+use glib::{clone, BoxedAnyObject};
+
 use glib::subclass::InitializingObject;
 use gtk::{
     subclass::prelude::*, CompositeTemplate, Entry, TemplateChild,
@@ -34,3 +36,40 @@ impl ObjectSubclass for PaymentWidget {
 impl ObjectImpl for PaymentWidget {}
 impl WidgetImpl for PaymentWidget {}
 impl BoxImpl for PaymentWidget {}
+
+use super::Payment;
+impl PaymentWidget {
+    pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {
+        // we need only propogate widget -> data.
+        self.from.get().connect_changed(
+            clone!(@strong boxed_payment => move |from| {
+            let mut payment = boxed_payment.borrow_mut::<Payment>();
+            payment.from = from.text();
+            println!("payment changed: {:#?}", payment);
+                }),
+        );
+
+        self.amount.get().connect_changed(move |amount| {
+            let mut payment = boxed_payment.borrow_mut::<Payment>();
+            let sum = amount.text().parse::<f32>().or_else(|err| {
+                if amount.text() == "" {
+                    Ok(0.)
+                } else {
+                    Err(err)
+                }
+            });
+            payment.amount = match sum {
+                Ok(sum) => {
+                    amount.remove_css_class("error");
+                    sum
+                }
+                Err(err) => {
+                    println!("{:#?}", err);
+                    amount.add_css_class("error");
+                    f32::NAN
+                }
+            };
+            println!("payment changed: {:#?}", payment);
+        });
+    }
+}
