@@ -1,10 +1,10 @@
 use adw::{glib, gtk, prelude::*};
-use glib::{clone, BoxedAnyObject};
+use glib::{clone, BoxedAnyObject, SignalHandlerId};
 
 use glib::subclass::InitializingObject;
-use gtk::{
-    subclass::prelude::*, CompositeTemplate, Entry, TemplateChild,
-};
+use gtk::{subclass::prelude::*, CompositeTemplate, Entry, TemplateChild};
+
+use std::cell::{RefCell, RefMut};
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
@@ -14,6 +14,7 @@ pub struct PaymentWidget {
     pub from: TemplateChild<Entry>,
     #[template_child]
     pub amount: TemplateChild<Entry>,
+    signal_ids: [RefCell<Option<SignalHandlerId>>; 2],
 }
 
 // The central trait for subclassing a GObject
@@ -39,37 +40,67 @@ impl BoxImpl for PaymentWidget {}
 
 use super::Payment;
 impl PaymentWidget {
+    /// unbind the widget from the object
+    pub fn unbind_boxed_payment(&self) {
+        for maybe_signal in &self.signal_ids {
+            if let Some(signal_id) = maybe_signal.take() {
+                self.from.get().disconnect(signal_id)
+            }
+        }
+    }
+    /// bind info from the widget to the boxed Payment object.
     pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {
-        // we need only propogate widget -> data.
-        self.from.get().connect_changed(
-            clone!(@strong boxed_payment => move |from| {
-            let mut payment = boxed_payment.borrow_mut::<Payment>();
-            payment.from = from.text();
-            println!("payment changed: {:#?}", payment);
-                }),
-        );
+        // check and disconnect previously assigned object.
+        for maybe_signal in &self.signal_ids {
+            if let Some(signal_id) = maybe_signal.take() {
+                eprintln!(
+                    "signalid {:#?} was still bound while rebinding",
+                    signal_id
+                );
+                self.from.get().disconnect(signal_id);
+            }
+        }
 
-        self.amount.get().connect_changed(move |amount| {
-            let mut payment = boxed_payment.borrow_mut::<Payment>();
-            let sum = amount.text().parse::<f32>().or_else(|err| {
-                if amount.text() == "" {
-                    Ok(0.)
-                } else {
-                    Err(err)
-                }
-            });
-            payment.amount = match sum {
-                Ok(sum) => {
-                    amount.remove_css_class("error");
-                    sum
-                }
-                Err(err) => {
-                    println!("{:#?}", err);
-                    amount.add_css_class("error");
-                    f32::NAN
-                }
-            };
-            println!("payment changed: {:#?}", payment);
-        });
+        // bind the `from` Entry
+        self.signal_ids[0].replace(Some(self.from.get().connect_changed(
+            clone!(@strong boxed_payment => move |from| {
+                let mut payment: RefMut<Payment> =
+                    boxed_payment.borrow_mut();
+
+                payment.from = from.text();
+                println!("payment changed: {:#?}", payment);
+            }),
+        )));
+
+        // bind the `amount` Entry
+        self.signal_ids[1].replace(Some(
+            self.amount.get().connect_changed(move |amount| {
+                // get the mutable reference inside the box
+                let mut payment = boxed_payment.borrow_mut::<Payment>();
+                // parse the text into a f32
+                let sum: Result<f32, _> =
+                    amount.text().parse().or_else(|err| {
+                        // empty entry is not an error
+                        if amount.text() == "" {
+                            Ok(0.)
+                        } else {
+                            Err(err)
+                        }
+                    });
+                // if the entry contains an error, style it as such
+                payment.amount = match sum {
+                    Ok(sum) => {
+                        amount.remove_css_class("error");
+                        sum
+                    }
+                    Err(err) => {
+                        println!("{:#?}", err);
+                        amount.add_css_class("error");
+                        f32::NAN
+                    }
+                };
+                println!("payment changed: {:#?}", payment);
+            }),
+        ));
     }
 }
