@@ -14,7 +14,7 @@ pub struct PaymentWidget {
     pub from: TemplateChild<Entry>,
     #[template_child]
     pub amount: TemplateChild<Entry>,
-    signal_ids: [RefCell<Option<SignalHandlerId>>; 2],
+    signal_ids: RefCell<Option<[SignalHandlerId; 2]>>,
 }
 
 // The central trait for subclassing a GObject
@@ -42,29 +42,35 @@ use super::Payment;
 impl PaymentWidget {
     /// unbind the widget from the object
     pub fn unbind_boxed_payment(&self) {
-        for maybe_signal in &self.signal_ids {
-            if let Some(signal_id) = maybe_signal.take() {
-                self.from.get().disconnect(signal_id)
+        if let Some(signal_ids) = self.signal_ids.take() {
+            for id in signal_ids {
+                self.from.get().disconnect(id);
             }
         }
-	self.from.get().set_text("");
-	self.amount.get().set_text("");
+        // for maybe_signal in &self.signal_ids {
+        //     if let Some(signal_id) = maybe_signal.take() {
+        //         self.from.get().disconnect(signal_id)
+        //     }
+        // }
+        self.from.get().set_text("");
+        self.amount.get().set_text("");
     }
     /// bind info from the widget to the boxed Payment object.
     pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {
         // check and disconnect previously assigned object.
-        for maybe_signal in &self.signal_ids {
-            if let Some(signal_id) = maybe_signal.take() {
+
+        if let Some(signal_ids) = self.signal_ids.take() {
+            for id in signal_ids {
                 eprintln!(
                     "signalid {:#?} was still bound while rebinding",
-                    signal_id
+                    id
                 );
-                self.from.get().disconnect(signal_id);
+                self.from.get().disconnect(id);
             }
         }
 
         // bind the `from` Entry
-        self.signal_ids[0].replace(Some(self.from.get().connect_changed(
+        let new_signal_id = self.from.get().connect_changed(
             clone!(@strong boxed_payment => move |from| {
                 let mut payment: RefMut<Payment> =
                     boxed_payment.borrow_mut();
@@ -72,10 +78,11 @@ impl PaymentWidget {
                 payment.from = from.text();
                 println!("payment changed: {:#?}", payment);
             }),
-        )));
+        );
 
         // bind the `amount` Entry
-        self.signal_ids[1].replace(Some(
+        let new_signal_ids = [
+            new_signal_id,
             self.amount.get().connect_changed(move |amount| {
                 // get the mutable reference inside the box
                 let mut payment = boxed_payment.borrow_mut::<Payment>();
@@ -103,6 +110,8 @@ impl PaymentWidget {
                 };
                 println!("payment changed: {:#?}", payment);
             }),
-        ));
+        ];
+
+        self.signal_ids.borrow_mut().replace(new_signal_ids);
     }
 }

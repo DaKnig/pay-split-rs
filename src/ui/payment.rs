@@ -18,7 +18,7 @@ impl PaymentWidget {
         self.imp().bind_boxed_payment(boxed_payment)
     }
     pub fn unbind_boxed_payment(&self) {
-	self.imp().unbind_boxed_payment();
+        self.imp().unbind_boxed_payment();
     }
 }
 
