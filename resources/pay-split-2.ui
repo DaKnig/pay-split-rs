@@ -15,13 +15,12 @@
             <property name="vexpand">True</property>
             <child>
               <object class="AdwHeaderBar" id="input-header">
-                <property name="title-widget">beep</property>
-                <child>
-                  <object class="AdwWindowTitle" id="beep">
+                <child type="title">
+                  <object class="AdwWindowTitle">
                     <property name="title">Transactions</property>
                   </object>
                 </child>
-                <child>
+                <child type="start">
                   <object class="GtkButton" id="add-button">
                     <property name="icon-name">list-add-symbolic</property>
                   </object>
@@ -56,9 +55,8 @@
             <property name="vexpand">True</property>
             <child>
               <object class="AdwHeaderBar" id="output-header">
-                <property name="title-widget">bap</property>
-                <child>
-                  <object class="AdwWindowTitle" id="bap">
+                <child type="title">
+                  <object class="AdwWindowTitle">
                     <property name="title">Who owes whom</property>
                   </object>
                 </child>

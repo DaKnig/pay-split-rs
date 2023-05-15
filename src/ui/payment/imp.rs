@@ -11,9 +11,9 @@ use std::cell::{RefCell, RefMut};
 #[template(resource = "/null/daknig/pay-split-rs-2/payment.ui")]
 pub struct PaymentWidget {
     #[template_child]
-    pub from: TemplateChild<Entry>,
+    pub(super) from: TemplateChild<Entry>,
     #[template_child]
-    pub amount: TemplateChild<Entry>,
+    pub(super) amount: TemplateChild<Entry>,
     signal_ids: RefCell<Option<[SignalHandlerId; 2]>>,
 }
 
@@ -41,22 +41,20 @@ impl BoxImpl for PaymentWidget {}
 use super::Payment;
 impl PaymentWidget {
     /// unbind the widget from the object
-    pub fn unbind_boxed_payment(&self) {
+    pub(super) fn unbind_boxed_payment(&self) {
         if let Some(signal_ids) = self.signal_ids.take() {
             for id in signal_ids {
                 self.from.get().disconnect(id);
             }
         }
-        // for maybe_signal in &self.signal_ids {
-        //     if let Some(signal_id) = maybe_signal.take() {
-        //         self.from.get().disconnect(signal_id)
-        //     }
-        // }
         self.from.get().set_text("");
         self.amount.get().set_text("");
     }
     /// bind info from the widget to the boxed Payment object.
-    pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {
+    pub(super) fn bind_boxed_payment(
+        &self,
+        boxed_payment: BoxedAnyObject,
+    ) {
         // check and disconnect previously assigned object.
 
         if let Some(signal_ids) = self.signal_ids.take() {

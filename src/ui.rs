@@ -52,7 +52,7 @@ pub fn build_ui(app: &Application) {
         let boxed_payment: BoxedAnyObject = list_item
             .item()
             .and_downcast()
-            .expect("The item has to be an `IntegerObject`.");
+            .expect("The item has to be an `Payment`.");
 
         // Get `PaymentWidget` from `ListItem`
         let widget: PaymentWidget = list_item
