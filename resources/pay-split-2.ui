@@ -33,11 +33,16 @@
               </object>
             </child>
             <child>
-              <object class="AdwClampScrollable">
+              <object class="GtkScrolledWindow">
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkListView" id="input-view">
-                    <property name="margin-bottom">5</property>
+                  <object class="AdwClampScrollable">
+                    <child>
+                      <object class="GtkListView" id="input-view">
+                        <property name="hexpand">True</property>
+                        <property name="margin-bottom">5</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
