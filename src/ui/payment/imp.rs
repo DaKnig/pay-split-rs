@@ -47,6 +47,8 @@ impl PaymentWidget {
                 self.from.get().disconnect(signal_id)
             }
         }
+	self.from.get().set_text("");
+	self.amount.get().set_text("");
     }
     /// bind info from the widget to the boxed Payment object.
     pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {

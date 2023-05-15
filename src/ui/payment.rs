@@ -17,6 +17,15 @@ impl PaymentWidget {
     pub fn bind_boxed_payment(&self, boxed_payment: BoxedAnyObject) {
         self.imp().bind_boxed_payment(boxed_payment)
     }
+    pub fn unbind_boxed_payment(&self) {
+	self.imp().unbind_boxed_payment();
+    }
+}
+
+impl Default for PaymentWidget {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 #[derive(Debug)]

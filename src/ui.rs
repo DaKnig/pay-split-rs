@@ -62,7 +62,19 @@ pub fn build_ui(app: &Application) {
 
         // Set "widget" to "payment"
         widget.bind_boxed_payment(boxed_payment);
-        // widget.set_label(&integer_object.number().to_string());
+    });
+
+    factory.connect_unbind(move |_, list_item| {
+        // Get `PaymentWidget` from `ListItem`
+        let widget: PaymentWidget = list_item
+            .downcast_ref::<ListItem>()
+            .expect("Needs to be ListItem")
+            .child()
+            .and_downcast()
+            .expect("The child has to be a `PaymentWidget`.");
+
+        // unbind
+        widget.unbind_boxed_payment();
     });
 
     input_view.set_factory(Some(&factory));
