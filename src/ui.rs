@@ -119,16 +119,20 @@ pub fn build_ui(app: &Application) {
             return;
         }
 
+        if let Some(x) = paid.get("") {
+            if x.abs() < EPSILON {
+                paid.remove("");
+            }
+        }
         let avg = total / (paid.len() as f32);
-        let mut paid: Vec<(_, _)> =
-            paid.iter().map(|(k, v)| (v, k)).collect();
-
         // using partial_cmp to ensure no NANs and such.
-        paid.sort_unstable_by(|a, b| a.0.partial_cmp(b.0).unwrap());
+        let mut paid: Vec<_> = paid.iter().collect();
+        paid.sort_unstable_by(|a, b| a.1.partial_cmp(b.1).unwrap());
 
+        const EPSILON: f32 = 0.01;
         // normalize towards the average
         let mut paid: VecDeque<_> =
-            paid.into_iter().map(|x| (x.0 - avg, x.1)).collect();
+            paid.into_iter().map(|x| (x.1 - avg, x.0)).collect();
 
         let mut output = Vec::new();
 
@@ -137,7 +141,6 @@ pub fn build_ui(app: &Application) {
             println!("{} -> {}$", payment.1, payment.0)
         }
 
-        const EPSILON: f32 = 0.01;
         // tricking rust into giving me the front and the back :)
         while let (Some(mut front), Some(back)) =
             (paid.pop_front(), paid.back_mut())
