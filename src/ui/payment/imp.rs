@@ -74,7 +74,6 @@ impl PaymentWidget {
                     boxed_payment.borrow_mut();
 
                 payment.from = from.text();
-                println!("payment changed: {:#?}", payment);
             }),
         );
 
@@ -106,7 +105,6 @@ impl PaymentWidget {
                         f32::NAN
                     }
                 };
-                println!("payment changed: {:#?}", payment);
             }),
         ];
 

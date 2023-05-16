@@ -30,8 +30,8 @@ impl Default for PaymentWidget {
 
 #[derive(Debug)]
 pub struct Payment {
-    from: GString,
-    amount: f32,
+    pub from: GString,
+    pub amount: f32,
 }
 
 impl Default for Payment {
