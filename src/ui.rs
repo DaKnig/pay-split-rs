@@ -6,10 +6,7 @@ use adw::{Application, ApplicationWindow};
 
 use gio::{resources_register_include, ListStore};
 use glib::{clone, BoxedAnyObject};
-use gtk::{
-    Builder, Button, ListView, NoSelection,
-    SignalListItemFactory,
-};
+use gtk::{Builder, Button, ListView, NoSelection, SignalListItemFactory};
 
 mod payment;
 use payment::{Payment, PaymentWidget};
@@ -40,18 +37,18 @@ pub fn build_ui(app: &Application) {
         NoSelection::new(Some(input_list_store.clone()));
     input_view.set_model(Some(&input_selection_model));
     // factory
-    let factory = SignalListItemFactory::new();
-    factory.connect_setup(move |_, list_item| {
+    let input_factory = SignalListItemFactory::new();
+    input_factory.connect_setup(move |_, list_item| {
         let widget = PaymentWidget::new();
         list_item.set_child(Some(&widget));
     });
 
-    factory.connect_bind(move |_, list_item| {
+    input_factory.connect_bind(move |_, list_item| {
         // Get `Payment` from `ListItem`
         let boxed_payment: BoxedAnyObject = list_item
             .item()
             .and_downcast()
-            .expect("The item has to be an `Payment`.");
+            .expect("The item has to be an `BoxedAnyObject`.");
 
         // Get `PaymentWidget` from `ListItem`
         let widget: PaymentWidget = list_item
@@ -63,7 +60,7 @@ pub fn build_ui(app: &Application) {
         widget.bind_boxed_payment(boxed_payment);
     });
 
-    factory.connect_unbind(move |_, list_item| {
+    input_factory.connect_unbind(move |_, list_item| {
         // Get `PaymentWidget` from `ListItem`
         let widget: PaymentWidget = list_item
             .child()
@@ -74,7 +71,7 @@ pub fn build_ui(app: &Application) {
         widget.unbind_boxed_payment();
     });
 
-    input_view.set_factory(Some(&factory));
+    input_view.set_factory(Some(&input_factory));
 
     // adding rows...
     let add_button: Button = builder
