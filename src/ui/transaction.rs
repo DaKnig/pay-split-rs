@@ -1,33 +1,98 @@
-use adw::glib;
-use glib::GString;
+use std::cell::Cell;
+use std::cell::RefCell;
 
-pub struct Transaction {
-    pub from: GString,
-    pub to: GString,
-    pub amount: f32,
+use adw::{glib, gtk, subclass::prelude::*};
+use glib::{prelude::*, GString, Object, ParamSpec, Properties, Value};
+
+mod transaction_imp {
+    // Object holding the state
+    use super::*;
+
+    #[derive(Properties, Default)]
+    #[properties(wrapper_type = super::Transaction)]
+    pub struct Transaction {
+        #[property(get, set)]
+        pub from: RefCell<GString>,
+        #[property(get, set)]
+        pub to: RefCell<GString>,
+        #[property(get, set)]
+        pub amount: Cell<f32>,
+    }
+
+    // The central trait for subclassing a GObject
+    #[glib::object_subclass]
+    impl ObjectSubclass for Transaction {
+        const NAME: &'static str = "Transaction";
+        type Type = super::Transaction;
+    }
+
+    // Trait shared by all GObjects
+    impl ObjectImpl for Transaction {
+        fn properties() -> &'static [ParamSpec] {
+            Self::derived_properties()
+        }
+
+        fn set_property(
+            &self,
+            id: usize,
+            value: &Value,
+            pspec: &ParamSpec,
+        ) {
+            self.derived_set_property(id, value, pspec)
+        }
+
+        fn property(&self, id: usize, pspec: &ParamSpec) -> Value {
+            self.derived_property(id, pspec)
+        }
+    }
+}
+
+glib::wrapper! {
+    pub struct Transaction(ObjectSubclass<transaction_imp::Transaction>);
+}
+
+impl Transaction {
+    pub fn new(from: &str, to: &str, amount: f32) -> Self {
+        let obj: Self = Object::builder().build();
+        obj.set_from(from);
+        obj.set_to(to);
+        obj.set_amount(amount);
+        obj
+    }
 }
 
 // now the Transaction widget
 
-// mod imp;
+mod imp;
 
-// use glib::Object;
-// use gtk::{gio, glib, Application};
+glib::wrapper! {
+    pub struct TransactionWidget(ObjectSubclass<imp::TransactionWidget>)
+        @extends gtk::Box, gtk::Widget,
+        @implements gtk::Accessible, gtk::Buildable, gtk::Orientable,
+                    gtk::ConstraintTarget;
+}
 
-// glib::wrapper! {
-//     pub struct TransactionWidget(ObjectSubclass<imp::Box>)
-//         @extends gtk::Box, gtk::Widget,
-//         @implements gtk::Accessible, gtk::Buildable, gtk::Orientable,
-//                     gtk::ConstraintTarget;
-// }
+impl TransactionWidget {
+    pub fn new() -> Self {
+        // Create new TransactionWidget
+        Object::builder().build()
+    }
 
-// impl TransactionWidget {
-//     pub fn new(trans: &Transaction) -> Self {
-//         // Create new TransactionWidget
-//         Object::builder()
-//             .property("from", trans.from)
-//             .property("to", trans.to)
-//             .property("amount", trans.amount)
-//             .build()
-//     }
-// }
+    pub fn bind_transaction(&self, transaction: Transaction) {
+        // since this is gonna be regenerated each time anyway, might as well
+        // treat it as write-only and just clear the model, forcing rebind
+        self.imp().from.get().set_text(&transaction.from());
+        self.imp().to.get().set_text(&transaction.to());
+        self.imp()
+            .amount
+            .get()
+            .set_text(&format!("{}", transaction.amount()));
+    }
+
+    /// unbind the widget from the object
+    pub(super) fn unbind_transaction(&self) {
+        self.imp().from.get().set_text("");
+        self.imp().amount.get().set_text("");
+        self.imp().to.get().set_text("");
+    }
+}

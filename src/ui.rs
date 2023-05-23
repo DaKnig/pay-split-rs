@@ -12,7 +12,7 @@ mod payment;
 use payment::{Payment, PaymentWidget};
 
 mod transaction;
-use transaction::Transaction;
+use transaction::{Transaction, TransactionWidget};
 
 pub fn build_ui(app: &Application) {
     resources_register_include!("pay-split-2.gresource")
@@ -30,12 +30,17 @@ pub fn build_ui(app: &Application) {
     // now create the list thingie:
     // view
     let input_view: ListView = builder.object("input-view").unwrap();
-    let _output_view: ListView = builder.object("output-view").unwrap();
+    let output_view: ListView = builder.object("output-view").unwrap();
     // model
     let input_list_store = ListStore::new(BoxedAnyObject::static_type());
     let input_selection_model =
         NoSelection::new(Some(input_list_store.clone()));
     input_view.set_model(Some(&input_selection_model));
+
+    let output_list_store = ListStore::new(Transaction::static_type());
+    let output_selection_model =
+        NoSelection::new(Some(output_list_store.clone()));
+    output_view.set_model(Some(&output_selection_model));
     // factory
     let input_factory = SignalListItemFactory::new();
     input_factory.connect_setup(move |_, list_item| {
@@ -72,6 +77,35 @@ pub fn build_ui(app: &Application) {
     });
 
     input_view.set_factory(Some(&input_factory));
+
+    let output_factory = SignalListItemFactory::new();
+
+    output_factory.connect_unbind(move |_, list_item| {
+        let widget: TransactionWidget = list_item
+            .child()
+            .and_downcast()
+            .expect("The child has to be a `TransactionWidget`.");
+
+        // unbind
+        widget.unbind_transaction();
+    });
+
+    output_factory.connect_bind(move |_, list_item| {
+        // Get `Transaction` from `ListItem`
+        let transaction: Transaction = list_item
+            .item()
+            .and_downcast()
+            .expect("The item has to be an `Transaction`.");
+
+        // Get `TransactionWidget` from `ListItem`
+        let widget: TransactionWidget = list_item
+            .child()
+            .and_downcast()
+            .expect("The child has to be a `TransactionWidget`.");
+
+        // Set "widget" to "transaction"
+        widget.bind_transaction(transaction);
+    });
 
     // adding rows...
     let add_button: Button = builder
@@ -146,11 +180,7 @@ pub fn build_ui(app: &Application) {
             // amount to transfer
             let amount = back.0.min(front.0.abs());
             // transfer
-            output.push(Transaction {
-                from: front.1.clone(),
-                to: back.1.clone(),
-                amount,
-            });
+            output.push(Transaction::new(&front.1, &back.1, amount));
             front.0 += amount;
             back.0 -= amount;
 
@@ -160,7 +190,12 @@ pub fn build_ui(app: &Application) {
         // by now we have drained the list
         println!("debug: normalized paid list");
         for debt in output {
-            println!("{} -> {}$ -> {}", debt.from, debt.amount, debt.to)
+            println!(
+                "{} -> {}$ -> {}",
+                debt.from(),
+                debt.amount(),
+                debt.to()
+            )
         }
     });
 
