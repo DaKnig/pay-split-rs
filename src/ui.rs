@@ -7,7 +7,7 @@ use adw::{Application, ApplicationWindow};
 use gio::{resources_register_include, ListStore};
 use glib::{clone, BoxedAnyObject};
 use gtk::{
-    Builder, Button, ListItem, ListView, NoSelection,
+    Builder, Button, ListView, NoSelection,
     SignalListItemFactory,
 };
 
@@ -43,17 +43,11 @@ pub fn build_ui(app: &Application) {
     let factory = SignalListItemFactory::new();
     factory.connect_setup(move |_, list_item| {
         let widget = PaymentWidget::new();
-        list_item
-            .downcast_ref::<ListItem>()
-            .expect("Needs to be ListItem")
-            .set_child(Some(&widget));
+        list_item.set_child(Some(&widget));
     });
 
     factory.connect_bind(move |_, list_item| {
         // Get `Payment` from `ListItem`
-        let list_item = list_item
-            .downcast_ref::<ListItem>()
-            .expect("Needs to be ListItem");
         let boxed_payment: BoxedAnyObject = list_item
             .item()
             .and_downcast()
@@ -72,8 +66,6 @@ pub fn build_ui(app: &Application) {
     factory.connect_unbind(move |_, list_item| {
         // Get `PaymentWidget` from `ListItem`
         let widget: PaymentWidget = list_item
-            .downcast_ref::<ListItem>()
-            .expect("Needs to be ListItem")
             .child()
             .and_downcast()
             .expect("The child has to be a `PaymentWidget`.");
