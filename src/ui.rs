@@ -80,6 +80,10 @@ pub fn build_ui(app: &Application) {
 
     let output_factory = SignalListItemFactory::new();
 
+    output_factory.connect_setup(move |_, list_item| {
+        list_item.set_child(Some(&TransactionWidget::new()));
+    });
+
     output_factory.connect_unbind(move |_, list_item| {
         let widget: TransactionWidget = list_item
             .child()
@@ -106,6 +110,7 @@ pub fn build_ui(app: &Application) {
         // Set "widget" to "transaction"
         widget.bind_transaction(transaction);
     });
+    output_view.set_factory(Some(&output_factory));
 
     // adding rows...
     let add_button: Button = builder
@@ -157,7 +162,8 @@ pub fn build_ui(app: &Application) {
         let mut paid: VecDeque<_> =
             paid.into_iter().map(|x| (x.1 - avg, x.0)).collect();
 
-        let mut output = Vec::new();
+        output_list_store.remove_all();
+        //output_list_store; // Vec::new();
 
         println!("debug: normalized paid list");
         for payment in &paid {
@@ -168,7 +174,7 @@ pub fn build_ui(app: &Application) {
         while let (Some(mut front), Some(back)) =
             (paid.pop_front(), paid.back_mut())
         {
-            // removes all the tiny leftoversn
+            // removes all the tiny leftovers
             if -front.0 <= EPSILON {
                 continue;
             } else if back.0 < EPSILON {
@@ -180,7 +186,8 @@ pub fn build_ui(app: &Application) {
             // amount to transfer
             let amount = back.0.min(front.0.abs());
             // transfer
-            output.push(Transaction::new(&front.1, &back.1, amount));
+            output_list_store
+                .append(&Transaction::new(&front.1, &back.1, amount));
             front.0 += amount;
             back.0 -= amount;
 
@@ -189,13 +196,16 @@ pub fn build_ui(app: &Application) {
         }
         // by now we have drained the list
         println!("debug: normalized paid list");
-        for debt in output {
-            println!(
-                "{} -> {}$ -> {}",
-                debt.from(),
-                debt.amount(),
-                debt.to()
-            )
+        for debt in &output_list_store {
+            let debt: Transaction =
+                debt.ok().and_downcast::<Transaction>().unwrap();
+            println!("{}", debt);
+            // println!(
+            //     "{} -> {}$ -> {}",
+            //     debt.from(),
+            //     debt.amount(),
+            //     debt.to()
+            // )
         }
     });
 

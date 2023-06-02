@@ -3,5 +3,6 @@
   <gresource prefix="/null/daknig/pay-split-rs-2/">
     <file compressed="true" preprocess="xml-stripblanks">pay-split-2.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">payment.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">transaction.ui</file>
   </gresource>
 </gresources>

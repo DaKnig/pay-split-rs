@@ -22,7 +22,7 @@ mod transaction_imp {
     // The central trait for subclassing a GObject
     #[glib::object_subclass]
     impl ObjectSubclass for Transaction {
-        const NAME: &'static str = "Transaction";
+        const NAME: &'static str = "TransactionData";
         type Type = super::Transaction;
     }
 
@@ -58,6 +58,13 @@ impl Transaction {
         obj.set_to(to);
         obj.set_amount(amount);
         obj
+    }
+}
+
+use std::fmt::{self, Display, Formatter};
+impl Display for Transaction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
+        write!(f, "{} -> {}$ -> {}", self.from(), self.amount(), self.to())
     }
 }
 
