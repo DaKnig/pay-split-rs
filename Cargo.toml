@@ -1,5 +1,5 @@
 [package]
-name = "pay-split-rs-2"
+name = "pay-split-rs"
 version = "0.1.0"
 edition = "2021"
 

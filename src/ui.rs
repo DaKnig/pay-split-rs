@@ -15,12 +15,11 @@ mod transaction;
 use transaction::{Transaction, TransactionWidget};
 
 pub fn build_ui(app: &Application) {
-    resources_register_include!("pay-split-2.gresource")
+    resources_register_include!("pay-split.gresource")
         .expect("Failed to register resources.");
 
-    let builder = Builder::from_resource(
-        "/null/daknig/pay-split-rs-2/pay-split-2.ui",
-    );
+    let builder =
+        Builder::from_resource("/null/daknig/pay-split-rs/pay-split.ui");
 
     let window: ApplicationWindow = builder
         .object("window")
@@ -200,12 +199,6 @@ pub fn build_ui(app: &Application) {
             let debt: Transaction =
                 debt.ok().and_downcast::<Transaction>().unwrap();
             println!("{}", debt);
-            // println!(
-            //     "{} -> {}$ -> {}",
-            //     debt.from(),
-            //     debt.amount(),
-            //     debt.to()
-            // )
         }
     });
 

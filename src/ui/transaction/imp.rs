@@ -6,7 +6,7 @@ use gtk::{subclass::prelude::*, CompositeTemplate, Label, TemplateChild};
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/null/daknig/pay-split-rs-2/transaction.ui")]
+#[template(resource = "/null/daknig/pay-split-rs/transaction.ui")]
 pub struct TransactionWidget {
     #[template_child]
     pub(super) from: TemplateChild<Label>,

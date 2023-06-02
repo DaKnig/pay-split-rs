@@ -8,7 +8,7 @@ use std::cell::{RefCell, RefMut};
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/null/daknig/pay-split-rs-2/payment.ui")]
+#[template(resource = "/null/daknig/pay-split-rs/payment.ui")]
 pub struct PaymentWidget {
     #[template_child]
     pub(super) from: TemplateChild<Entry>,

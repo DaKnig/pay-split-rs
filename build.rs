@@ -2,6 +2,6 @@ fn main() {
     glib_build_tools::compile_resources(
         &["resources"],
         "resources/resources.gresource.xml",
-        "pay-split-2.gresource",
+        "pay-split.gresource",
     );
 }
