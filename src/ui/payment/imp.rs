@@ -1,10 +1,8 @@
 use adw::{glib, gtk, prelude::*};
-use glib::{clone, BoxedAnyObject};
+use glib::clone;
 
 use glib::subclass::InitializingObject;
 use gtk::{subclass::prelude::*, CompositeTemplate, Entry, TemplateChild};
-
-use std::cell::RefMut;
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
@@ -40,29 +38,23 @@ impl BoxImpl for PaymentWidget {}
 use super::Payment;
 impl PaymentWidget {
     /// unbind the widget from the object
-    pub(super) fn unbind_boxed_payment(&self) {
+    pub(super) fn unbind_payment(&self) {
         self.from.get().set_text("");
         self.amount.get().set_text("");
     }
     /// bind info from the widget to the boxed Payment object.
-    pub(super) fn bind_boxed_payment(
-        &self,
-        boxed_payment: BoxedAnyObject,
-    ) {
+    pub(super) fn bind_payment(&self, payment: Payment) {
         // bind the `from` Entry
         self.from.get().connect_changed(
-            clone!(@strong boxed_payment => move |from| {
-                let mut payment: RefMut<Payment> =
-                    boxed_payment.borrow_mut();
-
-                payment.from = from.text();
+            clone!(@strong payment => move |from| {
+                payment.set_from(from.text());
             }),
         );
 
         // bind the `amount` Entry
         self.amount.get().connect_changed(move |amount| {
             // get the mutable reference inside the box
-            let mut payment = boxed_payment.borrow_mut::<Payment>();
+            // let mut payment = boxed_payment.borrow_mut::<Payment>();
             // parse the text into a f32
             let sum: Result<_, _> = amount.text().parse().or_else(|err| {
                 // empty entry is not an error
@@ -73,7 +65,7 @@ impl PaymentWidget {
                 }
             });
             // if the entry contains an error, style it as such
-            payment.amount = match sum {
+            payment.set_amount(match sum {
                 Ok(sum) => {
                     amount.remove_css_class("error");
                     sum
@@ -83,7 +75,7 @@ impl PaymentWidget {
                     amount.add_css_class("error");
                     f32::NAN
                 }
-            };
+            });
         });
     }
 }

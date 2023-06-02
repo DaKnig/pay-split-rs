@@ -5,7 +5,7 @@ use adw::{gio, glib, gtk};
 use adw::{Application, ApplicationWindow};
 
 use gio::{resources_register_include, ListStore};
-use glib::{clone, BoxedAnyObject};
+use glib::clone;
 use gtk::{Builder, Button, ListView, NoSelection, SignalListItemFactory};
 
 mod payment;
@@ -31,7 +31,7 @@ pub fn build_ui(app: &Application) {
     let input_view: ListView = builder.object("input-view").unwrap();
     let output_view: ListView = builder.object("output-view").unwrap();
     // model
-    let input_list_store = ListStore::new(BoxedAnyObject::static_type());
+    let input_list_store = ListStore::new(Payment::static_type());
     let input_selection_model =
         NoSelection::new(Some(input_list_store.clone()));
     input_view.set_model(Some(&input_selection_model));
@@ -49,10 +49,10 @@ pub fn build_ui(app: &Application) {
 
     input_factory.connect_bind(move |_, list_item| {
         // Get `Payment` from `ListItem`
-        let boxed_payment: BoxedAnyObject = list_item
+        let payment: Payment = list_item
             .item()
             .and_downcast()
-            .expect("The item has to be an `BoxedAnyObject`.");
+            .expect("The item has to be an `Payment`.");
 
         // Get `PaymentWidget` from `ListItem`
         let widget: PaymentWidget = list_item
@@ -61,7 +61,7 @@ pub fn build_ui(app: &Application) {
             .expect("The child has to be a `PaymentWidget`.");
 
         // Set "widget" to "payment"
-        widget.bind_boxed_payment(boxed_payment);
+        widget.bind_payment(payment);
     });
 
     input_factory.connect_unbind(move |_, list_item| {
@@ -72,7 +72,7 @@ pub fn build_ui(app: &Application) {
             .expect("The child has to be a `PaymentWidget`.");
 
         // unbind
-        widget.unbind_boxed_payment();
+        widget.unbind_payment();
     });
 
     input_view.set_factory(Some(&input_factory));
@@ -117,7 +117,7 @@ pub fn build_ui(app: &Application) {
         .expect("add-button not found in ui file");
     add_button.connect_clicked(
         clone!(@weak input_list_store => move |_| {
-            let payment = BoxedAnyObject::new(Payment::default());
+            let payment = Payment::default();
             input_list_store.append(&payment);
         }),
     );
@@ -130,16 +130,13 @@ pub fn build_ui(app: &Application) {
         let mut paid = BTreeMap::new();
         let mut total: f32 = 0.;
         for payment in &input_list_store {
-            let boxed_payment = payment
+            let payment = payment
                 .ok() // safely since we wont change the list store
-                .and_downcast::<BoxedAnyObject>()
-                .expect("The item has to be an `Payment`.");
+                .and_downcast::<Payment>()
+                .expect("The item has to be a `Payment`.");
 
-            let payment = boxed_payment.borrow::<Payment>();
-
-            *paid.entry(payment.from.clone()).or_insert(0.) +=
-                payment.amount;
-            total += payment.amount;
+            *paid.entry(payment.from()).or_insert(0.) += payment.amount();
+            total += payment.amount();
         }
         if total.is_nan() {
             eprintln!("please correct your inputs");
