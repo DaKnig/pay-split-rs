@@ -10,11 +10,11 @@
     <child>
       <object class="AdwLeaflet" id="leaflet">
         <child>
-          <object class="GtkBox" id="inputs">
+          <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="AdwHeaderBar" id="input-header">
+              <object class="AdwHeaderBar">
                 <child type="title">
                   <object class="AdwWindowTitle">
                     <property name="title">Transactions</property>
@@ -58,12 +58,12 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="outputs">
+          <object class="GtkBox">
             <property name="hexpand">True</property>
             <property name="orientation">vertical</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="AdwHeaderBar" id="output-header">
+              <object class="AdwHeaderBar">
                 <child type="title">
                   <object class="AdwWindowTitle">
                     <property name="title">Who owes whom</property>
