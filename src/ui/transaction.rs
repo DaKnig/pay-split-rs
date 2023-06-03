@@ -53,11 +53,11 @@ glib::wrapper! {
 
 impl Transaction {
     pub fn new(from: &str, to: &str, amount: f32) -> Self {
-        let obj: Self = Object::builder().build();
-        obj.set_from(from);
-        obj.set_to(to);
-        obj.set_amount(amount);
-        obj
+        Object::builder()
+            .property("from", from)
+            .property("to", to)
+            .property("amount", amount)
+            .build()
     }
 }
 

@@ -84,9 +84,9 @@ impl Display for Payment {
 
 impl Default for Payment {
     fn default() -> Self {
-        let obj: Self = Object::builder().build();
-        obj.set_from("");
-        obj.set_amount(0.0);
-        obj
+        Object::builder()
+            .property("from", "")
+            .property("amount", 0.0f32)
+            .build()
     }
 }
