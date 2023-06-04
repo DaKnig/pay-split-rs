@@ -4,11 +4,12 @@
   <!-- interface-name pay-split.ui -->
   <requires lib="gtk" version="4.8"/>
   <requires lib="libadwaita" version="1.3"/>
-  <object class="AdwApplicationWindow" id="window">
+  <template class="PaySplitWindow" parent="AdwApplicationWindow">
     <property name="default-height">360</property>
     <property name="default-width">294</property>
     <child>
       <object class="AdwLeaflet" id="leaflet">
+        <property name="fold-threshold-policy">natural</property>
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
@@ -44,13 +45,15 @@
             <child>
               <object class="GtkCenterBox">
                 <child type="start">
-                  <object class="GtkButton" id="add-button">
+                  <object class="GtkButton">
                     <property name="icon-name">list-add-symbolic</property>
+                    <signal name="clicked" handler="add_row" swapped="yes"/>
                   </object>
                 </child>
                 <child type="center">
                   <object class="GtkButton" id="split-button">
                     <property name="label">Split!</property>
+                    <signal name="clicked" handler="split" swapped="yes"/>
                   </object>
                 </child>
               </object>
@@ -87,5 +90,5 @@
         </child>
       </object>
     </child>
-  </object>
+  </template>
 </interface>
