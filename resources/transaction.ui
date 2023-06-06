@@ -5,27 +5,32 @@
   <requires lib="gtk" version="4.8"/>
   <template class="Transaction" parent="GtkBox">
     <child>
-      <object class="GtkLabel" id="from"/>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel" id="amount">
-            <property name="hexpand">True</property>
-            <property name="justify">center</property>
+      <object class="GtkCenterBox">
+        <property name="hexpand">True</property>
+        <child type="start">
+          <object class="GtkLabel" id="from"/>
+        </child>
+        <child type="center">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="amount">
+                <property name="hexpand">True</property>
+                <property name="justify">center</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="hexpand">True</property>
+                <property name="label">➡</property>
+              </object>
+            </child>
           </object>
         </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="hexpand">True</property>
-            <property name="label">➡</property>
-          </object>
+        <child type="end">
+          <object class="GtkLabel" id="to"/>
         </child>
       </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="to"/>
     </child>
   </template>
 </interface>
