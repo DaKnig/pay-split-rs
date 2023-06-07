@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, VecDeque};
 
-use adw::{gio, glib, gtk, prelude::*, subclass::prelude::*};
+use adw::{gio, glib, gtk, prelude::*, subclass::prelude::*, Leaflet};
 use gio::ListStore;
 use glib::subclass::InitializingObject;
 use gtk::{Button, CompositeTemplate, ListView};
@@ -17,6 +17,8 @@ pub struct Window {
     pub output_view: TemplateChild<ListView>,
     #[template_child(id = "split-button")]
     pub split_button: TemplateChild<Button>,
+    #[template_child(id = "leaflet")]
+    pub leaflet: TemplateChild<Leaflet>,
 
     pub input_list_store: ListStore,
     pub output_list_store: ListStore,
@@ -54,7 +56,12 @@ impl Window {
         self.input_list_store.append(&payment);
     }
     #[template_callback]
+    pub fn back_to_payments(&self, _: &Button) {
+	self.leaflet.get().navigate(adw::NavigationDirection::Back);	
+    }
+    #[template_callback]
     pub fn split(&self, _: &Button) {
+	// update the result page
         let mut paid = BTreeMap::new();
         let mut total: f32 = 0.;
         for payment in self.input_list_store.into_iter() {
@@ -127,5 +134,8 @@ impl Window {
             let debt: Transaction = debt.ok().and_downcast().unwrap();
             println!("{}", debt);
         }
+	// change the active leaflet page to the result page
+	self.leaflet.get().navigate(adw::NavigationDirection::Forward);
     }
+
 }
