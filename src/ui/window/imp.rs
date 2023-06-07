@@ -114,7 +114,7 @@ impl Window {
             let amount = back.0.min(front.0.abs());
             // transfer
             self.output_list_store
-                .append(&Transaction::new(&front.1, &back.1, amount));
+                .append(&Transaction::new(front.1, back.1, amount));
             front.0 += amount;
             back.0 -= amount;
 

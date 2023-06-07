@@ -103,3 +103,9 @@ impl TransactionWidget {
         self.imp().to.get().set_text("");
     }
 }
+
+impl Default for TransactionWidget {
+    fn default() -> Self {
+	Self::new()
+    }
+}
