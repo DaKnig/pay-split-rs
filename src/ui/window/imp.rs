@@ -57,14 +57,17 @@ impl Window {
     pub fn split(&self, _: &Button) {
         let mut paid = BTreeMap::new();
         let mut total: f32 = 0.;
-        for payment in &self.input_list_store {
-            let payment = payment
+        for payment in self.input_list_store.into_iter() {
+            let payment: Payment = payment
                 .ok() // safely since we wont change the list store
-                .and_downcast::<Payment>()
+                .and_downcast()
                 .expect("The item has to be a `Payment`.");
 
             *paid.entry(payment.from()).or_insert(0.) += payment.amount();
             total += payment.amount();
+            if !payment.valid() {
+                total = f32::NAN;
+            }
         }
         if total.is_nan() {
             eprintln!("please correct your inputs");
@@ -121,8 +124,7 @@ impl Window {
         // by now we have drained the list
         println!("debug: normalized paid list");
         for debt in &self.output_list_store {
-            let debt: Transaction =
-                debt.ok().and_downcast::<Transaction>().unwrap();
+            let debt: Transaction = debt.ok().and_downcast().unwrap();
             println!("{}", debt);
         }
     }

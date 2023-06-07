@@ -93,7 +93,7 @@ impl TransactionWidget {
         self.imp()
             .amount
             .get()
-            .set_text(&format!("{}", transaction.amount()));
+            .set_text(&format!("{:.2}", transaction.amount()));
     }
 
     /// unbind the widget from the object

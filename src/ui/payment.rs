@@ -41,6 +41,8 @@ mod payment_imp {
         pub from: RefCell<GString>,
         #[property(get, set)]
         pub amount: Cell<f32>,
+        #[property(get, set)]
+        pub valid: Cell<bool>,
     }
 
     // The central trait for subclassing a GObject
@@ -87,6 +89,7 @@ impl Default for Payment {
         Object::builder()
             .property("from", "")
             .property("amount", 0.0f32)
+            .property("valid", true)
             .build()
     }
 }

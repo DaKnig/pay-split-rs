@@ -109,9 +109,6 @@ impl Window {
         });
         output_view.set_factory(Some(&output_factory));
 
-        // splitting...
-        // let split_button: Button = this.imp().split_button.get();
-        // split_button.connect_clicked(imp::Window::split);
         this
     }
 }

@@ -53,29 +53,27 @@ impl PaymentWidget {
 
         // bind the `amount` Entry
         self.amount.get().connect_changed(move |amount| {
-            // get the mutable reference inside the box
-            // let mut payment = boxed_payment.borrow_mut::<Payment>();
             // parse the text into a f32
             let sum: Result<_, _> = amount.text().parse().or_else(|err| {
                 // empty entry is not an error
                 if amount.text() == "" {
-                    Ok(0.)
+                    Ok(0.0f32)
                 } else {
                     Err(err)
                 }
             });
             // if the entry contains an error, style it as such
-            payment.set_amount(match sum {
-                Ok(sum) => {
+            payment.set_valid(sum.is_ok());
+            payment.set_amount(sum.clone().unwrap_or(0.));
+            match sum {
+                Ok(_) => {
                     amount.remove_css_class("error");
-                    sum
                 }
                 Err(err) => {
                     println!("{:#?}", err);
                     amount.add_css_class("error");
-                    f32::NAN
                 }
-            });
+            }
         });
     }
 }
