@@ -13,6 +13,7 @@
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="vexpand">True</property>
+            <property name="width-request">240</property>
             <child>
               <object class="AdwHeaderBar">
                 <child type="title">
