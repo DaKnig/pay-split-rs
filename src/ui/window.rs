@@ -109,6 +109,8 @@ impl Window {
         });
         output_view.set_factory(Some(&output_factory));
 
+        this.imp().add_row(); // start with one empty row
+
         this
     }
 }

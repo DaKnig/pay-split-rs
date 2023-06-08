@@ -50,17 +50,20 @@ impl AdwApplicationWindowImpl for Window {}
 
 #[gtk::template_callbacks]
 impl Window {
+    pub fn maybe_add_row(&self) {
+        (&self.input_list_store).into_iter().last();
+    }
     #[template_callback]
-    pub fn add_row(&self, _: &Button) {
+    pub fn add_row(&self) {
         let payment = super::Payment::default();
         self.input_list_store.append(&payment);
     }
     #[template_callback]
-    pub fn back_to_payments(&self, _: &Button) {
+    pub fn back_to_payments(&self) {
         self.leaflet.navigate(adw::NavigationDirection::Back);
     }
     #[template_callback]
-    pub fn split(&self, _: &Button) {
+    pub fn split(&self) {
         // update the result page
         let mut paid = BTreeMap::new();
         let mut total: f32 = 0.;
@@ -74,6 +77,7 @@ impl Window {
             total += payment.amount();
             if !payment.valid() {
                 total = f32::NAN;
+                break;
             }
         }
         if total.is_nan() {
