@@ -27,15 +27,20 @@ get the latest version.
 
 *** Fedora
 
-`# dnf install gtk4-devel libadwaita-devel cargo rust`
+#+begin_src sh
+  dnf install gtk4-devel libadwaita-devel cargo rust
+#+end_src
 
 *** Alpine, PostmarketOS
 
-`# apk add gtk4.0-dev libadwaita-dev cargo rust`
+#+begin_src sh
+  apk add gtk4.0-dev libadwaita-dev cargo rust
+#+end_src
 
 ** Building the program
 
 Run the following command and go grab a coffee:
 
-`$ cargo run --release`
-
+#+begin_src sh
+  cargo run --release
+#+end_src
