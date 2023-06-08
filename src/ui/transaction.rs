@@ -106,6 +106,6 @@ impl TransactionWidget {
 
 impl Default for TransactionWidget {
     fn default() -> Self {
-	Self::new()
+        Self::new()
     }
 }

@@ -57,11 +57,11 @@ impl Window {
     }
     #[template_callback]
     pub fn back_to_payments(&self, _: &Button) {
-	self.leaflet.get().navigate(adw::NavigationDirection::Back);	
+        self.leaflet.get().navigate(adw::NavigationDirection::Back);
     }
     #[template_callback]
     pub fn split(&self, _: &Button) {
-	// update the result page
+        // update the result page
         let mut paid = BTreeMap::new();
         let mut total: f32 = 0.;
         for payment in self.input_list_store.into_iter() {
@@ -134,8 +134,11 @@ impl Window {
             let debt: Transaction = debt.ok().and_downcast().unwrap();
             println!("{}", debt);
         }
-	// change the active leaflet page to the result page
-	self.leaflet.get().navigate(adw::NavigationDirection::Forward);
+        // change the active leaflet page to the result page
+        if self.leaflet.get().is_folded() {
+            self.leaflet
+                .get()
+                .navigate(adw::NavigationDirection::Forward);
+        }
     }
-
 }
