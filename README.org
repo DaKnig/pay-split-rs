@@ -1,0 +1,41 @@
+* Pay-split is a bill splitter
+
+#+html: <p align="center"><img src="screenshots/Transactions.png" /></p>
+#+html: <p align="center"><img src="screenshots/Debts.png" /></p>
+#+html: <p align="center"><img src="screenshots/Desktop.png" /></p>
+
+... using GTK4 and libadwaita to adapt for mobile devices.
+
+Ever had to split the pay evenly at the end of the evening? well now you can,
+with this slick, GTK4-based app, with minimal effort!
+
+Works on Linux Mobile with the power of LibAdwaita! just clone this repo to
+get the latest version.
+
+** Dependencies
+
+- gtk4
+- libadwaita
+
+* Building
+
+** Build dependencies
+
+- gtk4 dev package
+- libadwaita dev package
+- rust toolchain
+
+*** Fedora
+
+`# dnf install gtk4-devel libadwaita-devel cargo rust`
+
+*** Alpine, PostmarketOS
+
+`# apk add gtk4.0-dev libadwaita-dev cargo rust`
+
+** Building the program
+
+Run the following command and go grab a coffee:
+
+`$ cargo run --release`
+
