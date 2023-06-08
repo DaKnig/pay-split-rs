@@ -88,19 +88,18 @@ impl TransactionWidget {
     pub fn bind_transaction(&self, transaction: Transaction) {
         // since this is gonna be regenerated each time anyway, might as well
         // treat it as write-only and just clear the model, forcing rebind
-        self.imp().from.get().set_text(&transaction.from());
-        self.imp().to.get().set_text(&transaction.to());
+        self.imp().from.set_text(&transaction.from());
+        self.imp().to.set_text(&transaction.to());
         self.imp()
             .amount
-            .get()
             .set_text(&format!("{:.2}", transaction.amount()));
     }
 
     /// unbind the widget from the object
     pub(super) fn unbind_transaction(&self) {
-        self.imp().from.get().set_text("");
-        self.imp().amount.get().set_text("");
-        self.imp().to.get().set_text("");
+        self.imp().from.set_text("");
+        self.imp().amount.set_text("");
+        self.imp().to.set_text("");
     }
 }
 

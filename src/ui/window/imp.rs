@@ -57,7 +57,7 @@ impl Window {
     }
     #[template_callback]
     pub fn back_to_payments(&self, _: &Button) {
-        self.leaflet.get().navigate(adw::NavigationDirection::Back);
+        self.leaflet.navigate(adw::NavigationDirection::Back);
     }
     #[template_callback]
     pub fn split(&self, _: &Button) {
@@ -135,10 +135,8 @@ impl Window {
             println!("{}", debt);
         }
         // change the active leaflet page to the result page
-        if self.leaflet.get().is_folded() {
-            self.leaflet
-                .get()
-                .navigate(adw::NavigationDirection::Forward);
+        if self.leaflet.is_folded() {
+            self.leaflet.navigate(adw::NavigationDirection::Forward);
         }
     }
 }

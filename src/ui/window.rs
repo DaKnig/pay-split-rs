@@ -29,13 +29,13 @@ impl Window {
         let input_list_store = this.imp().input_list_store.clone();
         let input_selection_model =
             NoSelection::new(Some(input_list_store));
-        let input_view = this.imp().input_view.get();
+        let input_view = &this.imp().input_view;
         input_view.set_model(Some(&input_selection_model));
 
         let output_list_store = this.imp().output_list_store.clone();
         let output_selection_model =
             NoSelection::new(Some(output_list_store));
-        let output_view = this.imp().output_view.get();
+        let output_view = &this.imp().output_view;
         output_view.set_model(Some(&output_selection_model));
 
         // factory
