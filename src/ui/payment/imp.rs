@@ -1,7 +1,7 @@
 use adw::{glib, gtk, prelude::*};
 use glib::clone;
 
-use glib::subclass::InitializingObject;
+use glib::{g_warning, subclass::InitializingObject};
 use gtk::{subclass::prelude::*, CompositeTemplate, Entry, TemplateChild};
 
 // Object holding the state
@@ -70,7 +70,7 @@ impl PaymentWidget {
                     amount.remove_css_class("error");
                 }
                 Err(err) => {
-                    println!("{:#?}", err);
+                    g_warning!("pay-split-rs", "{:#?}", err);
                     amount.add_css_class("error");
                 }
             }

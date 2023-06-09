@@ -1,8 +1,9 @@
 use std::collections::{BTreeMap, VecDeque};
+use std::fmt::Write;
 
 use adw::{gio, glib, gtk, prelude::*, subclass::prelude::*, Leaflet};
 use gio::ListStore;
-use glib::subclass::InitializingObject;
+use glib::{g_debug, g_warning, subclass::InitializingObject};
 use gtk::{Button, CompositeTemplate, ListView};
 
 use crate::ui::{payment::*, transaction::*};
@@ -81,7 +82,7 @@ impl Window {
             }
         }
         if total.is_nan() {
-            eprintln!("please correct your inputs");
+            g_warning!("pay-split-rs", "please correct your inputs");
             return;
         }
 
@@ -103,9 +104,14 @@ impl Window {
         self.output_list_store.remove_all();
         //output_list_store; // Vec::new();
 
-        println!("debug: normalized paid list");
-        for payment in &paid {
-            println!("{} -> {}$", payment.1, payment.0)
+        {
+            let mut paid_list: String = "normalized paid list\n".into();
+
+            for payment in &paid {
+                write!(paid_list, "{} -> {}$\n", payment.1, payment.0)
+                    .unwrap()
+            }
+            g_debug!("pay-split-rs", "{}", paid_list);
         }
 
         // tricking rust into giving me the front and the back :)
@@ -133,10 +139,13 @@ impl Window {
             paid.push_front(front);
         }
         // by now we have drained the list
-        println!("debug: normalized paid list");
-        for debt in &self.output_list_store {
-            let debt: Transaction = debt.ok().and_downcast().unwrap();
-            println!("{}", debt);
+        {
+            let mut msg: String = "normalized paid list\n".into();
+            for debt in &self.output_list_store {
+                let debt: Transaction = debt.ok().and_downcast().unwrap();
+                write!(msg, "{}\n", debt).unwrap();
+            }
+            g_debug!("pay-split-rs", "{}", msg);
         }
         // change the active leaflet page to the result page
         if self.leaflet.is_folded() {
