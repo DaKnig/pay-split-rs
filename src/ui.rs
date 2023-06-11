@@ -16,5 +16,5 @@ pub fn build_ui(app: &Application) {
     let window = Window::new(app);
 
     // finally, the GUI is constructed.
-    window.show();
+    window.present();
 }
