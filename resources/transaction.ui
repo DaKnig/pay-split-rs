@@ -4,6 +4,8 @@
   <!-- interface-name transaction.ui -->
   <requires lib="gtk" version="4.8"/>
   <template class="Transaction" parent="GtkBox">
+    <property name="margin-end">15</property>
+    <property name="margin-start">15</property>
     <child>
       <object class="GtkCenterBox">
         <property name="hexpand">True</property>
