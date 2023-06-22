@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-adw = { version = "0.4.1", package = "libadwaita" }
+adw = { version = "0.4", package = "libadwaita", features = ["v1_2"] }
 
 [build-dependencies]
-glib-build-tools = "0.17.0"
+glib-build-tools = "0.17"

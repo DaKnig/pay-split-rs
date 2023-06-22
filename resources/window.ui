@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.11.3 -->
+<!-- Created with Cambalache 0.12.1 -->
 <interface>
   <!-- interface-name pay-split.ui -->
   <requires lib="gtk" version="4.8"/>
@@ -16,15 +16,12 @@
             <property name="width-request">240</property>
             <child>
               <object class="AdwHeaderBar">
+                <property name="show-end-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="default | sync-create">True</property>
                 <child type="title">
                   <object class="AdwWindowTitle">
                     <property name="title">Transactions</property>
                   </object>
                 </child>
-                <!-- Custom fragments -->
-                <binding name="show-end-title-buttons">
-                  <lookup name="folded">leaflet</lookup>
-                </binding>
               </object>
             </child>
             <child>
@@ -72,15 +69,12 @@
             <property name="vexpand">True</property>
             <child>
               <object class="AdwHeaderBar">
+                <property name="show-start-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="default | sync-create">True</property>
                 <child type="title">
                   <object class="AdwWindowTitle">
                     <property name="title">Who owes whom</property>
                   </object>
                 </child>
-                <!-- Custom fragments -->
-                <binding name="show-start-title-buttons">
-                  <lookup name="folded">leaflet</lookup>
-                </binding>
               </object>
             </child>
             <child>
@@ -95,16 +89,13 @@
             </child>
             <child>
               <object class="GtkCenterBox">
+                <property name="visible" bind-source="leaflet" bind-property="folded" bind-flags="default | sync-create">True</property>
                 <child type="start">
                   <object class="GtkButton">
                     <property name="icon-name">go-previous-symbolic</property>
                     <signal name="clicked" handler="back_to_payments" swapped="yes"/>
                   </object>
                 </child>
-                <!-- Custom fragments -->
-                <binding name="visible">
-                  <lookup name="folded">leaflet</lookup>
-                </binding>
               </object>
             </child>
           </object>
